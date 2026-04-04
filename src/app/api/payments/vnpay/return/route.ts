@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
       vnpParams[key] = value;
     });
 
+    console.log('📥 VNPay Callback Params:', vnpParams);
+
     // Verify return URL
     const vnpayService = createVNPayService();
     const verifyResult = vnpayService.verifyReturnUrl(vnpParams);
