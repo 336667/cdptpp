@@ -45,18 +45,24 @@ function PaymentSuccessPageContent() {
     const fetchOrder = async () => {
       try {
         setLoading(true)
-        const query = orderId
-          ? `?orderId=${orderId}`
-          : orderNumber
-          ? `?orderNumber=${orderNumber}`
-          : ''
+        
+        if (orderId) {
+          // Fetch by orderId (MongoDB _id)
+          const response = await fetch(`${baseUrl}/api/orders/${orderId}`)
+          const data = await response.json()
 
-        const response = await fetch(`${baseUrl}/api/orders${query}`)
-        const data = await response.json()
+          if (data.success && data.data) {
+            setOrder(data.data)
+          }
+        } else if (orderNumber) {
+          // Fetch by orderNumber
+          const response = await fetch(`${baseUrl}/api/orders?orderNumber=${orderNumber}`)
+          const data = await response.json()
 
-        if (data.success && data.data) {
-          const orderData = Array.isArray(data.data) ? data.data[0] : data.data
-          setOrder(orderData)
+          if (data.success && data.data) {
+            const orderData = Array.isArray(data.data) ? data.data[0] : data.data
+            setOrder(orderData)
+          }
         }
       } catch (error) {
         console.error('Error fetching order:', error)
@@ -136,7 +142,7 @@ function PaymentSuccessPageContent() {
                     <div>
                       <p className="text-on-surface-muted text-sm font-body">Tổng tiền</p>
                       <p className="font-display font-bold text-primary text-lg">
-                        {order.total.toLocaleString('vi-VN')}₫
+                        {order.totalAmount?.toLocaleString('vi-VN') || '0'}₫
                       </p>
                     </div>
                   </div>
@@ -213,12 +219,14 @@ function PaymentSuccessPageContent() {
               >
                 Tiếp tục mua sắm
               </Link>
-              <Link
-                href={`/account/orders?orderNumber=${order?.orderNumber}`}
-                className="flex-1 py-3 font-display font-bold border-2 border-[#1a1a2e] text-[#1a1a2e] rounded-btn hover:bg-[#1a1a2e] hover:text-white transition-all cursor-pointer bg-transparent"
-              >
-                Xem chi tiết đơn hàng
-              </Link>
+              {order && (
+                <Link
+                  href={`/order?orderId=${order._id || order.orderNumber}`}
+                  className="flex-1 py-3 font-display font-bold border-2 border-[#1a1a2e] text-[#1a1a2e] rounded-btn hover:bg-[#1a1a2e] hover:text-white transition-all cursor-pointer bg-transparent text-center"
+                >
+                  Xem chi tiết đơn hàng
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -48,11 +48,16 @@ export async function GET(request: NextRequest) {
         }
         
         await order.save();
+
+        // Redirect to success page with order._id
+        return NextResponse.redirect(
+          new URL(`/payment/success?orderId=${order._id.toString()}`, request.url)
+        );
       }
 
-      // Redirect to success page
+      // If order not found, redirect with orderNumber
       return NextResponse.redirect(
-        new URL(`/payment/success?orderId=${verifyResult.data.orderId}`, request.url)
+        new URL(`/payment/success?orderNumber=${verifyResult.data.orderId}`, request.url)
       );
     } else {
       // Payment failed
