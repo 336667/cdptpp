@@ -12,7 +12,7 @@ Thêm các biến sau vào file `.env.local`:
 
 ```env
 # VNPay Configuration
-VNPAY_TMN_CODE=T9TOMWLD
+VNPAY_TMN_CODE=T91OMWLD
 VNPAY_HASH_SECRET=9TQWKBH6TV2YQRXD9FZM0YZFY36GCW1F
 VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
 VNPAY_RETURN_URL=https://your-domain.com/api/payments/vnpay/return
@@ -27,7 +27,7 @@ VNPAY_RETURN_URL=https://your-domain.com/api/payments/vnpay/return
 ### 2. Thông tin Test Merchant
 
 **Merchant Test:**
-- TMN Code: `T9TOMWLD`
+- TMN Code: `T91OMWLD`
 - Hash Secret: `9TQWKBH6TV2YQRXD9FZM0YZFY36GCW1F`
 
 **Thẻ test:**
@@ -122,7 +122,7 @@ git push
    - `MONGODB_URI`
    - `MONGODB_DB_NAME`
    - `JWT_SECRET`
-   - `VNPAY_TMN_CODE`
+   - `VNPAY_TMN_CODE` (T91OMWLD)
    - `VNPAY_HASH_SECRET`
    - `VNPAY_URL`
    - `VNPAY_RETURN_URL` (dùng domain Vercel của bạn)
