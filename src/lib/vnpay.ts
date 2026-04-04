@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import querystring from 'querystring';
 
 export interface VNPayConfig {
   tmnCode: string;
@@ -57,7 +56,7 @@ export class VNPayService {
     vnpParams = this.sortObject(vnpParams);
 
     // Tạo chuỗi query
-    const signData = querystring.stringify(vnpParams, { encode: false });
+    const signData = this.buildQueryString(vnpParams);
 
     // Tạo secure hash
     const hmac = crypto.createHmac('sha512', this.config.hashSecret);
@@ -65,7 +64,7 @@ export class VNPayService {
     vnpParams.vnp_SecureHash = signed;
 
     // Tạo URL thanh toán
-    const paymentUrl = this.config.url + '?' + querystring.stringify(vnpParams, { encode: false });
+    const paymentUrl = this.config.url + '?' + this.buildQueryString(vnpParams);
 
     return paymentUrl;
   }
@@ -86,7 +85,7 @@ export class VNPayService {
     const sortedParams = this.sortObject(vnpParams);
 
     // Tạo chuỗi để verify
-    const signData = querystring.stringify(sortedParams, { encode: false });
+    const signData = this.buildQueryString(sortedParams);
 
     // Tạo secure hash
     const hmac = crypto.createHmac('sha512', this.config.hashSecret);
@@ -152,6 +151,15 @@ export class VNPayService {
     });
 
     return sorted;
+  }
+
+  /**
+   * Build query string without encoding
+   */
+  private buildQueryString(params: Record<string, string>): string {
+    return Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join('&');
   }
 
   /**
