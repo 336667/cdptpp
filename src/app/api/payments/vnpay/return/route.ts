@@ -3,6 +3,8 @@ import { createVNPayService } from '@/lib/vnpay';
 import Order from '@/models/Order';
 import connectDB from '@/lib/db/connect';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Get all query params
@@ -12,6 +14,8 @@ export async function GET(request: NextRequest) {
     searchParams.forEach((value, key) => {
       vnpParams[key] = value;
     });
+
+    console.log('📥 VNPay Callback Params:', vnpParams);
 
     // Verify return URL
     const vnpayService = createVNPayService();
@@ -46,11 +50,16 @@ export async function GET(request: NextRequest) {
         }
         
         await order.save();
+
+        // Redirect to success page with order._id
+        return NextResponse.redirect(
+          new URL(`/payment/success?orderId=${order._id.toString()}`, request.url)
+        );
       }
 
-      // Redirect to success page
+      // If order not found, redirect with orderNumber
       return NextResponse.redirect(
-        new URL(`/payment/success?orderId=${verifyResult.data.orderId}`, request.url)
+        new URL(`/payment/success?orderNumber=${verifyResult.data.orderId}`, request.url)
       );
     } else {
       // Payment failed
