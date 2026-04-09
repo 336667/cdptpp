@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-5.4-mini',
+        model: 'grok-4-1-fast-non-reasoning',
         messages: [
           {
             role: 'system',
